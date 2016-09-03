@@ -5,6 +5,8 @@ local RUBYSDKINC_64_DIR
 local RUBYSDKPLAT_64_DIR
 local RUBYSDKLIB_DIR
 
+local GLM_DIR
+
 local BUILD_DIR			= ("../build/")
 local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
@@ -14,6 +16,7 @@ BOOSTLIB_VC10_DIR	= BOOSTINC_DIR .. "/stage-vs2010/lib"
 RUBYSDKINC_64_DIR	= "k:/frameworks/src/ruby-c-extension-examples/ThirdParty/include/ruby/2.0/win32_x64"
 RUBYSDKPLAT_64_DIR	= RUBYSDKINC_64_DIR .. "/x64-mswin64_100"
 RUBYSDKLIB_DIR			= RUBYSDKINC_64_DIR .. "/../../../../lib/win32"
+GLM_DIR						= "K:/frameworks/src/glm-checkout-git"
 
 
 solution "SketchupShapeFitting"
@@ -73,7 +76,11 @@ solution "SketchupShapeFitting"
 		
 		libdirs { BOOSTLIB_VC10_DIR }
 				
-		includedirs { RUBYSDKINC_64_DIR, RUBYSDKPLAT_64_DIR, RUBYUTILS_DIR .. "/.." }
+		includedirs {	RUBYSDKINC_64_DIR, 
+							RUBYSDKPLAT_64_DIR, 
+							RUBYUTILS_DIR .. "/..",
+							GLM_DIR,
+		}
 		
 ----------------------------------------------------------------
 -- Third party ruby code
@@ -82,6 +89,12 @@ solution "SketchupShapeFitting"
 		toolset "v100"
 		kind "StaticLib"		
 		files {	RUBYUTILS_DIR .. "/**",
+					"sketchup/RubyUtils/*",
 		}
 						
-		includedirs { RUBYSDKINC_64_DIR, RUBYSDKPLAT_64_DIR }
+				--TODO move to solution def
+		includedirs {	RUBYSDKINC_64_DIR,
+							RUBYSDKPLAT_64_DIR,
+							RUBYUTILS_DIR .. "/..",
+							GLM_DIR,
+		}

@@ -1,21 +1,10 @@
-/* use as follows
-c = SUMB_ShapeFitting.fitShape
+/*
+ * ShapeFitting SU plugin
+ * 
+ * all plugin requests handled here
 */
-#include "includes-shapefitting.h"
 
-//TODO separate
-class ConsoleWriter
-{
-public:
-	template <typename T>
-	friend ConsoleWriter &operator<< (ConsoleWriter& cw, T const &v)
-	{
-		std::stringstream ss;
-		ss << v;
-		OutputDebugStringA(ss.str().c_str());
-		return cw;
-	}
-};
+#include "includes-shapefitting.h"
 
 using namespace std;
 
@@ -25,14 +14,37 @@ ConsoleWriter out;
 namespace SketchUp
 {
 
-	VALUE fitShape(VALUE X, VALUE data)
+	VALUE fitShape(VALUE v_module, VALUE v_shape)
 	{
 		try {
-			out << "fitShape() called!\n";
-			rb_warn("ShapeFitting plugin...");
+			// get points
+			Pts_t pts;
+			getShapePts(v_shape, &pts);
 
-			VALUE something = rb_ary_new2(1);
-			return something;
+			if (pts.empty())
+			{
+				out << "fitShape(): empty shape!\n";
+			}
+			else
+			{
+				out << "fitShape(): shape passed with " << pts.size() << " points.\n";
+			}
+
+			int i = 0;
+			VALUE pts_ar = rb_ary_new2(4);
+
+			for (auto it = pts.begin(); it != pts.end(); ++it, ++i)
+			{
+				if (i < 4)
+				{
+					VALUE vecar = rb_ary_new2(2);
+					rb_ary_store(vecar, 0, DBL2NUM(it->x));
+					rb_ary_store(vecar, 1, DBL2NUM(it->y));
+					rb_ary_store(pts_ar, i, vecar);
+				}
+			}
+
+			return pts_ar;
 		}
 		catch (std::exception const &e) {
 			// error has occured
@@ -42,12 +54,13 @@ namespace SketchUp
 			VALUE empty = rb_ary_new2(0);
 			return empty;
 		}
-	}
-}
+	} // fun fitshape
+
+} // namespace sketchup
 
 
 // Load this module from Ruby using:
-//   require 'SUMB_ShapeFitting'
+//   require 'mb_shape_fitting/win_x64/SUMB_ShapeFitting'
 extern "C"
 void Init_SUMB_ShapeFitting()
 {
