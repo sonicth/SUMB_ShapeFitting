@@ -15,8 +15,15 @@ typedef boost::shared_ptr<boost::dll::shared_library> SoPtr_t;
 
 typedef boost::function<void(Pts_t::value_type const &)> PointsPusher_f;
 
+enum EFitMethod
+{
+	FIT_FIRST4,
+	FIT_BBOX_CGAL,
+	FIT_BBOX_GTE,
+};
+
 DLL
-void detectFitPoly(Pts_t const &input, PointsPusher_f &pusher);
+void detectFitPoly(Pts_t const &input, PointsPusher_f &pusher, EFitMethod which_method = FIT_BBOX_GTE);
 
 
 inline boost::filesystem::path getDyLibPath(char const *dylib_name)

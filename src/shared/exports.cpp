@@ -1,5 +1,6 @@
 #include "exports.h"
 #include "../cgal/cgal-bbox.h"
+#include "../gte/gte-bbox.h"
 
 using namespace std;
 
@@ -15,14 +16,30 @@ void fitTakeFour(Pts_t const& input, PointsPusher_f& pusher)
 	}
 }
 
-void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher)
+void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_method)
 {
-	//fitTakeFour(input, pusher);
-
 	Pts_t tmppts;
-	doCgalStuff(input, tmppts);
+
+	switch (which_method)
+	{
+	case FIT_FIRST4:
+		fitTakeFour(input, pusher);
+		return;
+
+	case FIT_BBOX_CGAL:
+		fitPolyCGAL(input, tmppts);
+		break;
+
+	case FIT_BBOX_GTE:
+	default:
+		fitPolyGTE(input, tmppts);
+		break;
+	}
+
+	// copy temporary points
 	for (auto &pt:tmppts)
 	{
 		pusher(pt);
 	}
+
 }

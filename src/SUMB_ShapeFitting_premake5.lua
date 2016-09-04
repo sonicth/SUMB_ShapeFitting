@@ -10,6 +10,8 @@ local GLM_DIR
 local CGAL_DIR
 local GMP_DIR
 
+local GTE_DIR
+
 local BUILD_DIR			= ("../build/")
 local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
@@ -24,6 +26,10 @@ CGAL_DIR						= "K:/frameworks/build/CGAL-4.9_x64-beta1/include"
 CGALPLAT_DIR				= CGAL_DIR .. "/../build-".._ACTION.."/include"
 CGALLIB_DIR				= CGALPLAT_DIR .. "/../lib"
 GMP_DIR						= CGAL_DIR .. "/../auxiliary/gmp/include"
+GTE_DIR						= "K:/frameworks/src/GeometricTools_3_2/GTEngine/Include"
+GTELIB_DIR					= GTE_DIR .. "/../_Output/v140/x64/Release"
+GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
+
 
 
 
@@ -125,6 +131,8 @@ solution "SketchupShapeFitting"
 		}
 		
 		links {	"CgalBBoxLib", 
+					"GteLib",
+					"GTEngine.v14",
 		}
 		
 		includedirs {	GLM_DIR,
@@ -133,6 +141,14 @@ solution "SketchupShapeFitting"
 		libdirs {	BOOSTLIB_DIR,
 					CGALLIB_DIR,
 		}		
+		
+		configuration "Debug"
+			libdirs {	GTELIBd_DIR,	
+			}
+			
+		configuration "Release"
+			libdirs {	GTELIB_DIR,	
+			}
 ----------------------------------------------------------------
 -- CGAL project
 ----------------------------------------------------------------
@@ -149,3 +165,19 @@ solution "SketchupShapeFitting"
 							GMP_DIR,
 							GLM_DIR,
 		}
+----------------------------------------------------------------
+-- GTE project
+----------------------------------------------------------------
+	project "GteLib"
+		kind "StaticLib"		
+		flags { "StaticRuntime" }
+		pchsource	("gte/includes-gte.cpp")
+		pchheader	("includes-gte.h")
+		
+		files {	"gte/*",
+		}
+						
+		includedirs {	GTE_DIR,
+							GLM_DIR,
+		}
+		
