@@ -8,7 +8,7 @@ set FILENAME=mb_shape_fitting_v%VERSION%.rbz
 set CURR_DIR=%~dp0
 set ARCHIVE=%CURR_DIR%\%DST%\%FILENAME%
 
-REM delet existing archive
+REM delete existing archive
 del /f /q %ARCHIVE%
 
 REM add to archive
