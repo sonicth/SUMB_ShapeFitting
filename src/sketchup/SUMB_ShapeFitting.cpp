@@ -21,7 +21,7 @@ namespace SketchUp
 		try {
 			// get points
 			Pts_t pts, out_pts;
-			getShapePts(v_shape, &pts);
+			getShapePts(v_shape, pts);
 
 			if (pts.empty())
 			{

@@ -4,7 +4,7 @@
 #include <boost/filesystem/path.hpp>
 #include "../../shared/shared-geometry.h"
 
-void getShapePts(VALUE shape, Pts_t *pts);
+void getShapePts(VALUE shape, Pts_t& pts);
 
 class ConsoleWriter
 {

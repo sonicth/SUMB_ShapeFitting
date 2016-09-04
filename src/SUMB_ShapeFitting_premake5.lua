@@ -22,6 +22,7 @@ RUBYSDKLIB_DIR			= RUBYSDKINC_64_DIR .. "/../../../../lib/win32"
 GLM_DIR						= "K:/frameworks/src/glm-checkout-git"
 CGAL_DIR						= "K:/frameworks/build/CGAL-4.9_x64-beta1/include"
 CGALPLAT_DIR				= CGAL_DIR .. "/../build-".._ACTION.."/include"
+CGALLIB_DIR				= CGALPLAT_DIR .. "/../lib"
 GMP_DIR						= CGAL_DIR .. "/../auxiliary/gmp/include"
 
 
@@ -89,7 +90,10 @@ solution "SketchupShapeFitting"
 							RUBYUTILS_DIR .. "/..",
 							GLM_DIR,
 		}
-		
+				
+		postbuildcommands {
+			"../../update-ShapeFitting.cmd"
+		}
 ----------------------------------------------------------------
 -- Third party ruby code
 ----------------------------------------------------------------
@@ -127,9 +131,8 @@ solution "SketchupShapeFitting"
 		}
 		
 		libdirs {	BOOSTLIB_DIR,
-					CGAL_DIR,
-		}
-				
+					CGALLIB_DIR,
+		}		
 ----------------------------------------------------------------
 -- CGAL project
 ----------------------------------------------------------------
