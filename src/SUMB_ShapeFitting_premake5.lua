@@ -12,7 +12,7 @@ local GMP_DIR
 
 local GTE_DIR
 
-local BUILD_DIR			= ("../build/")
+local BUILD_DIR			= ("../build")
 local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
 BOOSTINC_DIR				= "k:/frameworks/src/boost_1_61_0"
@@ -35,8 +35,8 @@ GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
 
 solution "SketchupShapeFitting"
 	language "C++"
-	location (BUILD_DIR .. _ACTION)
-	targetdir (BUILD_DIR .. "products")
+	location (BUILD_DIR .. "/" .. _ACTION)
+	targetdir (BUILD_DIR .. "/products")
 	configurations { "Debug", "Release" }
 	platforms { "x64" }
 	
@@ -69,6 +69,7 @@ solution "SketchupShapeFitting"
 	configuration "Release"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
+		targetdir (BUILD_DIR .. "/products/release")
 
 ----------------------------------------------------------------
 -- The actual plugin .so
