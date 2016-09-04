@@ -1,13 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <boost/container/vector.hpp>
 #include "RubyUtils/RubyLib.h"
-#include <boost/foreach.hpp>
-
-
-typedef boost::container::vector<glm::dvec2> Pts_t;
-
+#include <boost/filesystem/path.hpp>
+#include "../../shared/shared-geometry.h"
 
 void getShapePts(VALUE shape, Pts_t *pts);
 

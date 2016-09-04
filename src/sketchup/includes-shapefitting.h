@@ -10,3 +10,8 @@
 
 // first party ruby utils
 #include "RubyUtils/mbRubyUtils.h"
+
+// exported functions
+#include "../shared/exports.h"
+
+#include <boost/foreach.hpp>
