@@ -4,9 +4,10 @@
 #include <iostream>
 #include <sstream>
 
+// boost
 #include <boost/range/algorithm.hpp>
 
-//TODO remove unnecesary includes
-#include <GTMathematics.h>
+// GTE lirary
+#include <Mathematics/GteBSRational.h>
+#include <Mathematics/GteUIntegerAP32.h>
 #include <Mathematics/GteMinimumAreaBox2.h>
-

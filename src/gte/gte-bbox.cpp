@@ -36,8 +36,7 @@ void fitPolyGTE(const Pts_t& input, Pts_t& output)
 	// vertex order as found in MinimumAreaBox2DWindow.cpp
 	int vx_map[] = { 0, 1, 3, 2 };
 
-	// fill the output
-	// minor precaution and reserve
+	// copy to internal representation
 	output.clear();
 	output.reserve(4);
 	for (auto &vx_idx: vx_map)

@@ -1,7 +1,11 @@
 /*
+ * copyright 2016 mike vasiljevs (contact@michaelvasiljevs.com)
  * ShapeFitting SU plugin
  * 
  * all plugin requests handled here
+ * 
+ *   Load this module from Ruby using:
+ *   require 'mb_shape_fitting/win_x64/SUMB_ShapeFitting'
 */
 
 #include "includes-shapefitting.h"
@@ -9,13 +13,14 @@
 using namespace std;
 namespace dll = boost::dll;
 
-
+// Debugger console writer
 ConsoleWriter out;
 
 namespace SketchUp
 {
 	SoPtr_t fitter_lib;
 
+	/// Ruby Interface function for fitting a polygon
 	VALUE fitShape(VALUE v_module, VALUE v_shape)
 	{
 		try {
@@ -31,35 +36,24 @@ namespace SketchUp
 			{
 				out << "fitShape(): shape passed with " << pts.size() << " points.\n";
 			}
-
 			
 			// get function..
 			auto fit_fun = fitter_lib->get<void(Pts_t const &, PointsPusher_f)>("detectFitPoly");
 			// create pusher..
 			//	NOTE backinserter would not work as it would still use the local heap
 			PointsPusher_f pusher = [&out_pts](Pts_t::value_type const &pt) { out_pts.push_back(pt); };
+			
 			// get points!
 			fit_fun(pts, pusher);
 
-			//TODO refactor to setShapePts
 			// write to ruby array
-			VALUE pts_ar = rb_ary_new2(out_pts.size());
-			int i = 0;
-			BOOST_FOREACH(auto const &pt, out_pts)
-			{
-				VALUE vecar = rb_ary_new2(2);
-				rb_ary_store(vecar, 0, DBL2NUM(pt.x));
-				rb_ary_store(vecar, 1, DBL2NUM(pt.y));
-				rb_ary_store(pts_ar, i, vecar);
-				++i;
-			}
-
+			auto pts_ar = setShapePts(out_pts);
 			return pts_ar;
 		}
 		catch (std::exception const &e) {
 			// error has occured
 			auto msg = e.what();
-			out << "fitShape() error: " << msg;
+			out << "***fitShape() exception: " << msg << "***\n";
 
 			VALUE empty = rb_ary_new2(0);
 			return empty;
@@ -69,8 +63,7 @@ namespace SketchUp
 } // namespace sketchup
 
 
-// Load this module from Ruby using:
-//   require 'mb_shape_fitting/win_x64/SUMB_ShapeFitting'
+// the Init_[Name] function creates Ruby module [Name] when called
 extern "C"
 void Init_SUMB_ShapeFitting()
 {
@@ -78,10 +71,13 @@ void Init_SUMB_ShapeFitting()
 	VALUE mod_val = rb_define_module_under(mod_val_root, "ShapeFitting");
 
 	rb_define_const(mod_val, "CEXT_VERSION", GetRubyInterface("1.0.0"));
+	
+	// Ruby will see these functions:
 	rb_define_module_function(mod_val, "suFitShape", VALUEFUNC(SketchUp::fitShape), 1);
 
+	// algorithms are stored at this DyLib
 	char const fitter_dylibname[] = "ShapeFittingDyLib.dll";
-	// open dynamic library
+	// ..open this DyLib
 	auto fitter_lib_path = getDyLibPath(fitter_dylibname);
 	SketchUp::fitter_lib = boost::make_shared<dll::shared_library>(fitter_lib_path);
 }

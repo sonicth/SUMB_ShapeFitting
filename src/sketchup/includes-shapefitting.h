@@ -4,6 +4,9 @@
 #include <iostream>
 #include <sstream>
 
+// boost
+#include <boost/foreach.hpp>
+
 // ruby C API
 #include "RubyUtils/RubyLib.h"
 #include "RubyUtils/RubyUtils.h"
@@ -12,6 +15,5 @@
 #include "RubyUtils/mbRubyUtils.h"
 
 // exported functions
-#include "../shared/exports.h"
+#include "../shared/fit-poly.h"
 
-#include <boost/foreach.hpp>

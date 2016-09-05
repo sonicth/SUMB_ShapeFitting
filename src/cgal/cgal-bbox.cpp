@@ -15,6 +15,7 @@ void fitPolyCGAL(const Pts_t& input, Pts_t &output)
 {
 	Polygon_2 p;
 
+	// convert internal to CGAL representation
 	br::transform(input, back_inserter(p), [&](auto &pt)
 	{
 		return Point_2(pt.x, pt.y);
@@ -26,9 +27,11 @@ void fitPolyCGAL(const Pts_t& input, Pts_t &output)
 		p.vertices_begin(), p.vertices_end(), std::back_inserter(p_m)
 			);
 
+	// must be a quad!
 	assert(p_m.size() == 4);
 	output.clear(); output.reserve(p_m.size());
 
+	// convert from CGAL to internal (GLM) format
 	std::transform(
 		p_m.vertices_begin(), p_m.vertices_end(),
 		std::back_inserter(output),
