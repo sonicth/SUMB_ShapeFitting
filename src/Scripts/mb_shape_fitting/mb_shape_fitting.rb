@@ -25,15 +25,12 @@ module MikeBasille
 			others = []
 
 			sel.each do |e|
-				case e.typename
-#				when "ComponentInstance"
-#					components.push(e)
-				when "Face"
+				if e.is_a? Sketchup::Face
 					faces.push(e)
 				else
 					others.push(e)
-				end
-			end
+				end #if
+			end #do
 
 			if faces.empty?
 				UI.messagebox("No faces are selected. Please select a face where to generate a park into and try again.")
@@ -94,6 +91,16 @@ module MikeBasille
 			face_data = getSelectedFacesPoints
 					
 			model = Sketchup.active_model
+			
+			if face_data.empty?
+				return
+			end
+			
+			if face_data.length == 1
+				model.start_operation("Shape Fitting", true)
+			else
+				model.start_operation("Shape Fitting #{face_data.length} Faces", true)
+			end
 					
 			_face_idx = 0;
 			face_data.each  { |fh|
@@ -110,7 +117,7 @@ module MikeBasille
 					result_poly_pts = suFitShape(input_region_geometry)
 
 					if not result_poly_pts.empty?
-						model.start_operation("fitting polygon with #{result_poly_pts.length} points...", true)
+						
 						
 						puts "adding fitted polygon..."
 						
@@ -120,12 +127,13 @@ module MikeBasille
 						addPoly(result_poly_pts)
 						puts "done."
 						
-						model.commit_operation
 					end #not empty result
 				end #not empty input
 				
 				_face_idx += 1
 			}
+			
+			model.commit_operation
 			
 		end #run shape fitting
 
