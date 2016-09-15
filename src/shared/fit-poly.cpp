@@ -1,5 +1,4 @@
 #include "fit-poly.h"
-#include "../cgal/cgal-bbox.h"
 #include "../gte/gte-bbox.h"
 
 using namespace std;
@@ -25,10 +24,6 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_
 	case FIT_FIRST4:
 		fitTakeFour(input, pusher);
 		return;
-
-	case FIT_BBOX_CGAL:
-		fitPolyCGAL(input, tmppts);
-		break;
 
 	case FIT_BBOX_GTE:
 	default:

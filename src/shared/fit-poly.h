@@ -22,7 +22,6 @@ typedef boost::function<void(Pts_t::value_type const &)> PointsPusher_f;
 enum EFitMethod
 {
 	FIT_FIRST4,			///< first 4 vertices form the output
-	FIT_BBOX_CGAL,		///< OBB using CGAL library
 	FIT_BBOX_GTE,		///< OBB using GTE library
 };
 
