@@ -1,8 +1,21 @@
+/*
+ * copyright 2016 mike vasiljevs (contact@michaelvasiljevs.com)
+ * ShapeFitting SU plugin
+ */
+ 
+// based on GTE library http://www.geometrictools.com/index.html
+// some code adapted from <GTEngine>\Samples\Geometrics\MinimumAreaBox2D\MinimumAreaBox2DWindow.cpp
+//
+// David Eberly, Geometric Tools, Redmond WA 98052
+// Copyright (c) 1998-2016
+// Distributed under the Boost Software License, Version 1.0.
+// http://www.boost.org/LICENSE_1_0.txt
+// http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+
+ 
 #include "includes-gte.h"
 #include "gte-bbox.h"
 
-// based on GTE library http://www.geometrictools.com/index.html
-// some code adapted from <GTEngine>\Samples\Geometrics\MinimumAreaBox2D\MinimumAreaBox2DWindow.cpp
 
 // GTE vector type
 typedef gte::Vector2<double> V2_t;

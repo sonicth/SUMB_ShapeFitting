@@ -1,4 +1,12 @@
-# Copyright 2016 Mike Vasiljevs
+=begin
+Copyright 2016 Mike Vasiljevs
+All Rights Reserved
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. 
+Author: Mike Vasiljevs 
+Organization: Mike Basille
+Name: ShapeFitting
+=end
+
 # quick load
 #			load "mv_park_generator/mv_generate.rb"
 
