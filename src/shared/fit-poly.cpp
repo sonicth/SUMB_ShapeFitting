@@ -5,6 +5,7 @@
  
 #include "fit-poly.h"
 #include "../gte/gte-bbox.h"
+#include "../algorithms/AxisDistance.h"
 
 using namespace std;
 
@@ -30,10 +31,15 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_
 		fitTakeFour(input, pusher);
 		return;
 
+	case FIT_AXES_FURTHEST: 
+		mapPolyAxesFurthest(input, tmppts);
+		break;
+
 	case FIT_BBOX_GTE:
 	default:
 		fitPolyGTE(input, tmppts);
 		break;
+	
 	}
 
 	// copy temporary points

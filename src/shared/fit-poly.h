@@ -28,6 +28,7 @@ enum EFitMethod
 {
 	FIT_FIRST4,			///< first 4 vertices form the output
 	FIT_BBOX_GTE,		///< OBB using GTE library
+	FIT_AXES_FURTHEST,	///< vertices that are furthers from the two axes, or clostest to the two axes mid-line
 };
 
 /// fit polygon inside an given input polygon

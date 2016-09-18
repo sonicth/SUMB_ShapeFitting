@@ -96,6 +96,7 @@ solution "SketchupShapeFitting"
 		postbuildcommands {
 			"../../update-ShapeFitting.cmd"
 		}
+		--TODO TARGET		C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe
 ----------------------------------------------------------------
 -- Third party ruby code
 ----------------------------------------------------------------
@@ -127,7 +128,7 @@ solution "SketchupShapeFitting"
 					"shared/shared-geometry.h",
 		}
 		
-		links {	"GteLib",
+		links {	"GteLib", "AlgorithmsLib",		-- local dependencies in project
 					"GTEngine.v14",
 		}
 		
@@ -159,4 +160,18 @@ solution "SketchupShapeFitting"
 		includedirs {	GTE_DIR,
 							GLM_DIR,
 		}
+----------------------------------------------------------------
+-- algorithms project (own work)
+----------------------------------------------------------------
+	project "AlgorithmsLib"
+		kind "StaticLib"		
+		flags { "StaticRuntime" }
+		pchsource	("algorithms/includes-algorithms.cpp")
+		pchheader	("includes-algorithms.h")
 		
+		files {	"algorithms/*",
+		}
+						
+		includedirs {	GLM_DIR,
+		}
+				

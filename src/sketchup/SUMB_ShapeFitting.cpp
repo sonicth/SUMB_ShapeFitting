@@ -38,13 +38,13 @@ namespace SketchUp
 			}
 			
 			// get function..
-			auto fit_fun = fitter_lib->get<void(Pts_t const &, PointsPusher_f)>("detectFitPoly");
+			auto fit_fun = fitter_lib->get<void(Pts_t const &, PointsPusher_f, EFitMethod)>("detectFitPoly");
 			// create pusher..
 			//	NOTE backinserter would not work as it would still use the local heap
 			PointsPusher_f pusher = [&out_pts](Pts_t::value_type const &pt) { out_pts.push_back(pt); };
 			
 			// get points!
-			fit_fun(pts, pusher);
+			fit_fun(pts, pusher, FIT_AXES_FURTHEST);
 
 			// write to ruby array
 			auto pts_ar = setShapePts(out_pts);
