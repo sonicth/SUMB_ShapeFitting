@@ -103,11 +103,13 @@ module MikeBasille
 			if face_data.empty?
 				return
 			end
-			
+
+
+			# for multiple faces make Undo message nicer
 			if face_data.length == 1
 				model.start_operation("Shape Fitting", true)
 			else
-				model.start_operation("Shape Fitting #{face_data.length} Faces", true)
+				model.start_operation("Shape Fitting (#{face_data.length} faces)", true)
 			end
 					
 			_face_idx = 0;

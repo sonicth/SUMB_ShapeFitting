@@ -78,6 +78,8 @@ solution "SketchupShapeFitting"
 		pchheader	("includes-shapefitting.h")
 		
 		files {	"sketchup/*",
+					-- also add ruby scripts - not compiled are there to change
+					"Scripts/**.rb",
 		}
 			
 		links {	"x64-msvcrt-ruby200", 
