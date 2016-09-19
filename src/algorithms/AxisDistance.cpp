@@ -10,6 +10,10 @@
 namespace br = boost::range;
 using namespace std;
 using namespace glm;
+namespace bg = boost::geometry;
+
+//TODO use boost log
+ConsoleWriter out;
 
 /// Axis Aligned Bounding Box
 /// @param	poly_pts	region poly
@@ -59,30 +63,45 @@ void aabbPoly(const Pts_t& input, Pts_t& output)
 	output.push_back({ vmax.x, vmin.y });
 }
 
-void mapPolyAxesFurthest(const Pts_t& input, Pts_t& output)
+void fitPolyAxesFurthest(const Pts_t& input, Pts_t& output)
 {
 	assert(output.empty());
 	output.clear();
 
-	// create AABB
-	Pts_t aabb_poly;
-	aabbPoly(input, aabb_poly);
-	
-	// AABB min/max
-	dvec2 vmin, vmax;
-	//dont re-compute: aabb(input, vmin, vmax);
-	// min and max are first and third vertices, independent of direction
-	vmin = aabb_poly[0];
-	vmax = aabb_poly[2];
+	Mb::poly pinput;
+	bg::append(pinput, input);
 
-	// centre of the AABB
-	auto mid = (vmin + vmax) * 0.5;
+	// bg aabb
+	Mb::box b;
+	bg::envelope(pinput, b);
 
-	// for each AABB poly vertex:
-	//	1. create ray from the centre and
-	//	2. intersect with the input poly
-	//TODO ...
+	Mb::point centre;
+	bg::centroid(pinput, centre);
 
-	//.. for out 'return' AABB poly
-	output = aabb_poly;
+	Pts_t corners;
+	corners.resize(4);
+	corners[0] = b.min_corner();
+	corners[1] = { b.min_corner().x, b.max_corner().y };
+	corners[2] = b.max_corner();
+	corners[3] = { b.max_corner().x, b.min_corner().y };
+
+	output.clear();
+	for (auto &corner:corners)
+	{
+		// ray from the centre to the corner of the bounding box (axis junction)
+		Mb::segment ray{centre, corner};
+
+		// 'cast' ray into the polygon boundary,
+		//	there should be only one hit
+		auto isections = Mb::intersectWithPoly(pinput, ray);
+		assert(!isections.empty());
+
+		if (isections.size() > 1)
+			out << "warning: more than one intersections found!\n";
+
+		// use hits as polygon corners
+		output.push_back(isections.front());
+
+	}
+	//bg::centroid()
 }

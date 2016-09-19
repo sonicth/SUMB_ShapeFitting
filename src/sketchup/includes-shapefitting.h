@@ -22,3 +22,5 @@
 // exported functions
 #include "../shared/fit-poly.h"
 
+#include "../shared/shared-logging.h"
+

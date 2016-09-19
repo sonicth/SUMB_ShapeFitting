@@ -11,4 +11,8 @@
 
 // boost
 #include <boost/range/algorithm.hpp>
+#include "../boost/boost-geometry.h"
+
+//TODO replace with boost logging
+#include "../shared/shared-logging.h"
 

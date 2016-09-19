@@ -14,6 +14,7 @@ local GTE_DIR
 local BUILD_DIR			= ("../build")
 local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
+--TODO relative paths for externals frameworks - should go into ./ThirdParty
 BOOSTINC_DIR				= "k:/frameworks/src/boost_1_61_0"
 BOOSTLIB_DIR				= BOOSTINC_DIR .. "/stage-".._ACTION.."/lib"
 BOOSTLIB_VC10_DIR	= BOOSTINC_DIR .. "/stage-vs2010/lib"
@@ -172,6 +173,7 @@ solution "SketchupShapeFitting"
 		pchheader	("includes-algorithms.h")
 		
 		files {	"algorithms/*",
+					"boost/*",
 		}
 						
 		includedirs {	GLM_DIR,
