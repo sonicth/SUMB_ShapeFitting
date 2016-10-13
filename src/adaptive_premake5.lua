@@ -67,6 +67,8 @@ solution "FittingAlgorithms"
 ----------------------------------------------------------------
 -- Algorithms Library
 dofile "proj_lib_adaptive_premake5.lua"
+-- Import/Export
+dofile "proj_lib_impexp_premake5.lua"
 ----------------------------------------------------------------
 -- Unit Test tool
 ----------------------------------------------------------------
@@ -79,5 +81,5 @@ dofile "proj_lib_adaptive_premake5.lua"
 				"algorithms/includes-test.*",
 		}
 		
-		links { "AdaptiveAlgorithmsLib" }
+		links { "AdaptiveAlgorithmsLib", "ImportExportLib" }
 				

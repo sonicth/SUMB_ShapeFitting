@@ -6,6 +6,8 @@
 
 
 #include "includes-test.h"
+#include "../io/import.h"
+#include "../io/export.h"
 
 #define BOOST_TEST_MODULE My Test
 //#define BOOST_TEST_DYN_LINK
@@ -34,10 +36,17 @@ BOOST_AUTO_TEST_CASE(adaptive_test)
 	Pts_t poly_in, poly_out;
 
 	// TODO get input polygon
+	//readObj1("../../sample_geometry/su1.obj", poly_in);
+	readObj1("../../sample_geometry/potato1a.obj", poly_in);
+	
+
 	BOOST_TEST(poly_in.size() >= 4);
 
 	// compute output poly - quad
 	mapPolyAdaptive(poly_in, poly_out);
 
 	BOOST_TEST(poly_out.size() == 4);
+
+	// write out!
+	writeObj1("output.obj", poly_out);
 }
