@@ -32,7 +32,7 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_
 		return;
 
 	case FIT_AXES_FURTHEST: 
-		mapPolyAxesFurthest(input, tmppts);
+		fitPolyAxesFurthest(input, tmppts);
 		break;
 
 	case FIT_BBOX_GTE:

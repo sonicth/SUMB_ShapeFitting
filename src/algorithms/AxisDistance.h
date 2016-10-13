@@ -11,4 +11,4 @@
 ///		(alternatively nearest to axes corners)
 /// @param input	vertices of the input region polygon
 /// @param output	vertices of the mapped quad
-void mapPolyAxesFurthest(const Pts_t& input, Pts_t& output);
+void fitPolyAxesFurthest(const Pts_t& input, Pts_t& output);
