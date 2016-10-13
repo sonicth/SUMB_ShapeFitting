@@ -14,7 +14,7 @@
 
 
 // boost
-#define BOOST_TEST_DYN_LINK
+//#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN BOOST_AUTO_TEST_MAIN
 
 // boost algorithms
