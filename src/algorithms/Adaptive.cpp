@@ -17,61 +17,106 @@ using namespace Algorithms;
 //TODO use boost log
 ConsoleWriter out;
 
-
-/// compute vertices that pass the given (dont product) threshold
-/// @param	in_poly		input polygon
-/// @param	threshold	dot product threshold - lower or equal is ok
-/// @return	vector of bool, true if vertex has passed the threshold
-vector<bool> computeThresholds(Pts_t const &in_poly, double threshold)
+/// adjacent edges thresholder based on dot product
+class DotThresholder
 {
-	// 1. compute normalised directions
-	Pts_t unit_directions;
-	pair_rotated(in_poly, back_inserter(unit_directions), [](auto &pt1, auto &pt2) { return normalize(pt2 - pt1); });
+	vector<double> dot_products;
 
-	// 2. compute dot products between current and next
-	auto num_pts = in_poly.size();
-	vector<double> dot_products(num_pts);
-
-	for (int i = 0; i < num_pts; ++i)
+public:
+	/// @param	in_poly		input polygon
+	DotThresholder(Pts_t const &in_poly)
 	{
-		auto i_prev = (i - 1 + num_pts) % num_pts;
-		// get pair directions
-		auto &dir_prev = unit_directions[i_prev];
-		auto &dir_next = unit_directions[i];
+		Pts_t unit_directions;
+		// 1. compute normalised directions
+		pair_rotated(in_poly, back_inserter(unit_directions), [](auto &pt1, auto &pt2) { return normalize(pt2 - pt1); });
 
-		// for the current vertex: dot product between the previous and next edge
-		dot_products[i] = dot(dir_prev, dir_next);
+		auto num_pts = in_poly.size();
+		dot_products.reserve(num_pts);
+		// 2. compute dot products between current and next
+		for (int i = 0; i < num_pts; ++i)
+		{
+			auto i_prev = (i - 1 + num_pts) % num_pts;
+			// get pair directions
+			auto &dir_prev = unit_directions[i_prev];
+			auto &dir_next = unit_directions[i];
+
+			// for the current vertex: dot product between the previous and next edge
+			dot_products.push_back(dot(dir_prev, dir_next));
+		}
 	}
 
-	// 3. compute corners that are on the corner
-	vector<bool> is_corner(num_pts);
-	for (int i = 0; i < num_pts; ++i)
+	/// filter vertices that pass the threshold condition
+	/// @param	threshold	dot product threshold - lower or equal is ok
+	/// @return	indices of vertices that are corners (passed the threshold test)
+	Idxs_t filter(double threshold)
 	{
-		is_corner[i] = dot_products[i] <= threshold;
+		// compute corners that are on the corner
+		Idxs_t corner_idxs;
+		int i = 0;
+		for (auto &dp : dot_products)
+		{
+			if (dp <= threshold)
+				corner_idxs.push_back(i);
+			// next index
+			++i;
+		}
+		return corner_idxs;
 	}
-
-	return is_corner;
-}
+};
 
 
 void fitPolyAdaptive(Pts_t const &in_poly, Pts_t &out_poly)
 {
-	//NOTE could be constant
-	//		or use constexpr math functions, like https://github.com/Morwenn/static_math
-	auto DOT_THRESHOLD = cos(M_PI / 6);
+	const auto NUM_CORNERS = 4;
+	const auto MAX_ITERATIONS = 10;
+	
+
+	// preconditions: input has more than 4 corners, otherwise there is no paint
+	assert(in_poly.size() > NUM_CORNERS);
+
+	// DOT product range
+	dvec2 cos_range(-1, 1);
 
 	// first thing - clear out poly
 	out_poly.clear();
+	
 
-	// compute thresholds
-	auto is_corner_thresholds = computeThresholds(in_poly, DOT_THRESHOLD);
+	DotThresholder thresholder(in_poly);
+	Idxs_t idxs;
 	int i = 0;
-	for (auto &pt: in_poly)
+	// compute thresholds
+	do
 	{
-		if (is_corner_thresholds[i])
-			out_poly.push_back(pt);
-		// increment i
+		auto threshold = (cos_range.x + cos_range.y)*0.5;
+		idxs = thresholder.filter(threshold);
+		auto num_idxs = idxs.size();
+
+		// adapt thresholds
+		if (num_idxs > NUM_CORNERS)
+		{
+			// more vertices classified as corners - 
+			//	reduce threshold, increasing angle between two edges
+			cos_range.y = threshold;
+		}
+		else if (num_idxs < NUM_CORNERS)
+		{
+			// less vertices classified -
+			//	increase threshold, allowing adjacent edges with greater angle in between
+			cos_range.x = threshold;
+		}
+
+		cerr << "**iteration " << i << endl;
 		++i;
+	} while (idxs.size() != NUM_CORNERS && i < MAX_ITERATIONS);
+
+	if (i == MAX_ITERATIONS && idxs.size() != NUM_CORNERS)
+		throw std::runtime_error("failed to detect quad shape!");
+
+
+	// push points/vertices that passed the test
+	for (auto &idx: idxs)
+	{
+		out_poly.push_back(in_poly[idx]);
 	}
 
 }

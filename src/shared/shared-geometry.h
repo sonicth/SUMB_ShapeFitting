@@ -9,3 +9,4 @@
 #include <boost/container/vector.hpp>
 
 typedef boost::container::vector<glm::dvec2> Pts_t;
+typedef boost::container::vector<int> Idxs_t;
