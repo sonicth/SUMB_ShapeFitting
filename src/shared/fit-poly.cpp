@@ -6,6 +6,7 @@
 #include "fit-poly.h"
 #include "../gte/gte-bbox.h"
 #include "../algorithms/AxisDistance.h"
+#include "../algorithms/Adaptive.h"
 
 using namespace std;
 
@@ -33,6 +34,10 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_
 
 	case FIT_AXES_FURTHEST: 
 		fitPolyAxesFurthest(input, tmppts);
+		break;
+
+	case FIT_ADAPTIVE_ANGLE_THRESHOLD:
+		fitPolyAdaptive(input, tmppts);
 		break;
 
 	case FIT_BBOX_GTE:

@@ -16,7 +16,6 @@ module MikeBasille
 		plugin_platform = 'win_x64'
 		plugin_name = File.dirname(__FILE__) + "/" + plugin_platform + '/' + 'SUMB_ShapeFitting.so'
 
-
 		require plugin_name
 
 		#@_object = 0xfeedbaaddeadbeef;
@@ -73,9 +72,9 @@ module MikeBasille
 			#puts "face with #{pts.length} points found."
 			return face_data;
 
-		end
+		end #getSelectedFacesPoints
 		
-		def self.addPoly(pts)
+		def self.addPoly(pts, y_offset = 0)
 		
 			model = Sketchup.active_model
 			ent = model.entities
@@ -86,7 +85,7 @@ module MikeBasille
 			# convert arrays to vectors
 			vpts = []
 			upts.each { |pt| 
-				vx = Geom::Point3d.new [pt[0], pt[1], 0]
+				vx = Geom::Point3d.new [pt[0], pt[1], y_offset]
 				vpts.push(vx) 
 			}
 
@@ -124,7 +123,9 @@ module MikeBasille
 				if not input_region_geometry.empty?
 					puts "creating fitting polygon..."
 					
-					result_poly_pts = suFitShape(input_region_geometry)
+					#TODO add UI for this
+					fit_method = 3
+					result_poly_pts = suFitShape(input_region_geometry, fit_method)
 
 					if not result_poly_pts.empty?
 						
@@ -134,7 +135,7 @@ module MikeBasille
 						# delete face
 						#deleteFaces([ fh[:face_object] ])
 													
-						addPoly(result_poly_pts)
+						addPoly(result_poly_pts, 0.01)
 						puts "done."
 						
 					end #not empty result

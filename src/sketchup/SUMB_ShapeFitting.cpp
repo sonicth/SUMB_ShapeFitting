@@ -21,7 +21,7 @@ namespace SketchUp
 	SoPtr_t fitter_lib;
 
 	/// Ruby Interface function for fitting a polygon
-	VALUE fitShape(VALUE v_module, VALUE v_shape)
+	VALUE fitShape(VALUE v_module, VALUE v_shape, VALUE v_fit_method)
 	{
 		try {
 			// get points
@@ -36,6 +36,9 @@ namespace SketchUp
 			{
 				out << "fitShape(): shape passed with " << pts.size() << " points.\n";
 			}
+
+			auto fit_method = static_cast<EFitMethod>(NUM2INT(v_fit_method));
+			assert(fit_method >= 0 && fit_method < FIT_METHOD_MAX || !"bad fit method id!");
 			
 			// get function..
 			auto fit_fun = fitter_lib->get<void(Pts_t const &, PointsPusher_f, EFitMethod)>("detectFitPoly");
@@ -44,7 +47,7 @@ namespace SketchUp
 			PointsPusher_f pusher = [&out_pts](Pts_t::value_type const &pt) { out_pts.push_back(pt); };
 			
 			// get points!
-			fit_fun(pts, pusher, FIT_AXES_FURTHEST);
+			fit_fun(pts, pusher, fit_method);
 
 			// write to ruby array
 			auto pts_ar = setShapePts(out_pts);
@@ -73,7 +76,7 @@ void Init_SUMB_ShapeFitting()
 	rb_define_const(mod_val, "CEXT_VERSION", GetRubyInterface("1.0.0"));
 	
 	// Ruby will see these functions:
-	rb_define_module_function(mod_val, "suFitShape", VALUEFUNC(SketchUp::fitShape), 1);
+	rb_define_module_function(mod_val, "suFitShape", VALUEFUNC(SketchUp::fitShape), 2);
 
 	// algorithms are stored at this DyLib
 	char const fitter_dylibname[] = "ShapeFittingDyLib.dll";
