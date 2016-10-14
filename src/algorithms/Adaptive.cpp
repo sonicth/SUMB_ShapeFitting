@@ -54,7 +54,7 @@ vector<bool> computeThresholds(Pts_t const &in_poly, double threshold)
 }
 
 
-void mapPolyAdaptive(Pts_t const &in_poly, Pts_t &out_poly)
+void fitPolyAdaptive(Pts_t const &in_poly, Pts_t &out_poly)
 {
 	//NOTE could be constant
 	//		or use constexpr math functions, like https://github.com/Morwenn/static_math

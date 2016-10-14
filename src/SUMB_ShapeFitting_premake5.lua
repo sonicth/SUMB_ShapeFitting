@@ -175,6 +175,8 @@ solution "SketchupShapeFitting"
 		files {	"algorithms/*",
 					"boost/*",
 		}
+		
+		excludes { "algorithms/adaptive_test.cpp" }
 						
 		includedirs {	GLM_DIR,
 		}

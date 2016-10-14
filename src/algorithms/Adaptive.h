@@ -10,4 +10,4 @@
 /// @brief Detect Quad best fitting the input polygon
 /// @param	in_poly		input polygon
 /// @param	out_poly	detected quad polygon
-void mapPolyAdaptive(Pts_t const &in_poly, Pts_t &out_poly);
+void fitPolyAdaptive(Pts_t const &in_poly, Pts_t &out_poly);

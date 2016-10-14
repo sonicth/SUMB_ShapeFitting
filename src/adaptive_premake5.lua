@@ -74,11 +74,8 @@ dofile "proj_lib_impexp_premake5.lua"
 ----------------------------------------------------------------
 	project "AdaptiveAlgorithmsTest"
 		kind "ConsoleApp"
-		pchsource	("algorithms/includes-test.cpp")
-		pchheader	("includes-test.h")
 		
 		files {	"algorithms/adaptive_test.cpp",
-				"algorithms/includes-test.*",
 		}
 		
 		links { "AdaptiveAlgorithmsLib", "ImportExportLib" }

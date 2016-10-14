@@ -4,8 +4,7 @@
  */
  
 
-
-#include "includes-test.h"
+#include "Adaptive.h"
 #include "../io/import.h"
 #include "../io/export.h"
 
@@ -43,7 +42,7 @@ BOOST_AUTO_TEST_CASE(adaptive_test)
 	BOOST_TEST(poly_in.size() >= 4);
 
 	// compute output poly - quad
-	mapPolyAdaptive(poly_in, poly_out);
+	fitPolyAdaptive(poly_in, poly_out);
 
 	BOOST_TEST(poly_out.size() == 4);
 
