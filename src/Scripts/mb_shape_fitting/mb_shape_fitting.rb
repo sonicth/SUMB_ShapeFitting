@@ -14,7 +14,12 @@ module MikeBasille
 
 	module ShapeFitting
 		plugin_platform = 'win_x64'
-		plugin_name = File.dirname(__FILE__) + "/" + plugin_platform + '/' + 'SUMB_ShapeFitting.so'
+		plugin_dir = File.dirname(__FILE__)
+		plugin_name = plugin_dir + "/" + plugin_platform + '/' + 'SUMB_ShapeFitting.so'
+		#UI library
+		skui_path = File.join( plugin_dir, 'SKUI' )
+		load File.join( skui_path, 'embed_skui.rb' )
+		::SKUI.embed_in( self )
 
 		require plugin_name
 
@@ -147,13 +152,49 @@ module MikeBasille
 			model.commit_operation
 			
 		end #run shape fitting
+		
+		def self.initUI
+			options = {
+			  :title           => 'Shape Fitting',
+			  :preferences_key => 'shape_fitting',
+			}
+			w = SKUI::Window.new( options )
+			
+			# list of methods
+			list = %w{ Adapted Box }
+			lst_dropdown = SKUI::Listbox.new( list )
+			lst_dropdown.value = lst_dropdown.items.first
+			lst_dropdown.name = :method_name
+			lst_dropdown.position( 100, 12 )
+			lst_dropdown.width = 170
+			lst_dropdown.on( :change ) { |control, value| # (?) Second argument needed?
+			  puts "Dropbox value: #{control.value}"
+			}
+			w.add_control( lst_dropdown )
+			#	.. label for list
+			lbl_input = SKUI::Label.new( 'Method:', lst_dropdown )
+			lbl_input.position( 10, 12 )
+			lbl_input.width = 50
+			w.add_control( lbl_input )
+			
+			b = SKUI::Button.new( 'Fit Shapes' ) { |control|
+				method = control.window[:method_name].value
+				puts "using method #{method}!"
+				dlg = runShapeFitting()
+			}
+			b.position( 10, 50 )
+			w.add_control( b )
+			
+			# shwo window!
+			w.show
+		end #initui
 
 	end #shapefitting
 	
 
 	unless file_loaded?(__FILE__)
 		UI.menu("Plugins").add_item("Shape Fitting") {
-			dlg = ShapeFitting.runShapeFitting
+			ShapeFitting.initUI()
 		}
 		file_loaded(__FILE__)
 		
