@@ -10,6 +10,8 @@
 
 void readObj1(char const * filename, Pts_t & pts_out)
 {
+	// clear previous data
+	pts_out.clear();
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

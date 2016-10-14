@@ -1,0 +1,10 @@
+# This file uses centimeters as units for non-parametric coordinates.
+
+g default
+v -16.637087 0.000000 -19.233502
+v -17.440737 0.000000 -18.812421
+v -13.558901 0.000000 22.323077
+v 26.990293 0.000000 -7.268537
+v -16.637087 0.000000 -19.233502
+g grassfire_1corner2_onboundary:poly_p_in_corrected
+f 1 2 3 4 5
