@@ -41,10 +41,6 @@ void aabb(const Pts_t& poly_pts, dvec2 &vmin, dvec2 &vmax)
 	}
 }
 
-/// create CW AABB polygon 
-/// @param	input	region poly
-/// @param	output	AABB poly
-static
 void aabbPoly(const Pts_t& input, Pts_t& output)
 {
 	// must be empty!

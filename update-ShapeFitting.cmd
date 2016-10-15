@@ -27,4 +27,4 @@ xcopy /y /d /f	"%LOCAL_PLUGIN_DIR%\mb_shape_fitting.rb"				"%SU_PLUGIN_SF_DIR%\"
 REM	..ui library
 xcopy /y /d /f /s	"%UILIB_DIR%"															"%SU_PLUGIN_SF_DIR%\"
 
-pause
+REM pause

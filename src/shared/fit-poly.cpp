@@ -10,6 +10,10 @@
 
 using namespace std;
 
+//TODO replace with proper logging system
+#include "shared-logging.h"
+extern ConsoleWriter out;
+
 void fitTakeFour(Pts_t const& input, PointsPusher_f& pusher)
 {
 	const size_t POLY_NUM_VXS = 4;
@@ -22,11 +26,11 @@ void fitTakeFour(Pts_t const& input, PointsPusher_f& pusher)
 	}
 }
 
-void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_method)
+void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t params)
 {
 	Pts_t tmppts;
 
-	switch (which_method)
+	switch (params.method)
 	{
 	case FIT_FIRST4:
 		fitTakeFour(input, pusher);
@@ -40,11 +44,22 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, EFitMethod which_
 		fitPolyAdaptive(input, tmppts);
 		break;
 
-	case FIT_BBOX_GTE:
 	default:
-		fitPolyGTE(input, tmppts);
+		out << "warning: undefined methdod, defaulting to box!";
+	case FIT_BBOX:
+		switch (params.box_type)
+		{
+		case BOX_AABB:
+			aabbPoly(input, tmppts);
+			break;
+
+		default:
+			out << "warning: undefined box type, defaulting to OBB!";
+		case BOX_OBB:
+			fitPolyGTE(input, tmppts);
+			break;
+		}
 		break;
-	
 	}
 
 	// copy temporary points

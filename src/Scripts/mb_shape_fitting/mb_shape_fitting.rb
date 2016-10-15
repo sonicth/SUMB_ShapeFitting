@@ -98,7 +98,7 @@ module MikeBasille
 			
 		end #adding poly
 
-		def self.runShapeFitting		
+		def self.runShapeFitting(ftting_params)		
 			
 			face_data = getSelectedFacesPoints
 					
@@ -128,9 +128,8 @@ module MikeBasille
 				if not input_region_geometry.empty?
 					puts "creating fitting polygon..."
 					
-					#TODO add UI for this
-					fit_method = 3
-					result_poly_pts = suFitShape(input_region_geometry, fit_method)
+					#fit!!!
+					result_poly_pts = suFitShape(input_region_geometry, ftting_params)
 
 					if not result_poly_pts.empty?
 						
@@ -153,6 +152,8 @@ module MikeBasille
 			
 		end #run shape fitting
 		
+		LEFTCOL = 90
+		
 		def self.initUI
 			options = {
 			  :title           => 'Shape Fitting',
@@ -160,29 +161,73 @@ module MikeBasille
 			}
 			w = SKUI::Window.new( options )
 			
-			# list of methods
-			list = %w{ Adapted Box }
-			lst_dropdown = SKUI::Listbox.new( list )
-			lst_dropdown.value = lst_dropdown.items.first
-			lst_dropdown.name = :method_name
-			lst_dropdown.position( 100, 12 )
-			lst_dropdown.width = 170
-			lst_dropdown.on( :change ) { |control, value| # (?) Second argument needed?
-			  puts "Dropbox value: #{control.value}"
-			}
-			w.add_control( lst_dropdown )
-			#	.. label for list
-			lbl_input = SKUI::Label.new( 'Method:', lst_dropdown )
-			lbl_input.position( 10, 12 )
-			lbl_input.width = 50
-			w.add_control( lbl_input )
 			
+			# type of box
+			box_names = [ "Axis Aligned", "Oriented" ]
+			drop_boxtype = SKUI::Listbox.new( box_names )
+			#puts "debug item #{drop_boxtype.items.first}"
+			drop_boxtype.value = drop_boxtype.items.first
+			drop_boxtype.name = :box_type
+			drop_boxtype.position( LEFTCOL, 38 )
+			drop_boxtype.width = 170
+			drop_boxtype.on( :change ) { |control, value| # (?) Second argument needed?
+				boxtype = control.value
+				puts "Box type #{boxtype}"
+			}
+			w.add_control( drop_boxtype )
+			
+			# 	label for box type 
+			lbl_boxtype = SKUI::Label.new( 'Box type:', drop_boxtype )
+			lbl_boxtype.position( 12, 40 )
+			lbl_boxtype.width = 50
+			w.add_control( lbl_boxtype )
+			
+			
+			# list of methods
+			#list = %w{ items are separated by space }
+			method_hash = { "Box" => 0, "Adaptive" => 1, "Axis Corners" => 2, "First Four" => 3 }
+			method_names = method_hash.keys
+			drop_method = SKUI::Listbox.new( method_names )
+			drop_method.value = drop_method.items.first
+			drop_method.name = :method_name
+			drop_method.position( LEFTCOL, 12 )
+			drop_method.width = 170
+			drop_method.on( :change ) { |control, value| # (?) Second argument needed?
+				selected_name = control.value
+				selected_method = method_hash[selected_name]
+				show_box_type = true
+				if selected_method == 1
+					show_box_type = false
+				end
+				drop_boxtype.enabled = show_box_type
+				lbl_boxtype.enabled = show_box_type
+				
+				
+				#puts "Method id: #{selected_method_id} ('#{selected_name}'), show box: #{show_box_type}"
+			}
+			w.add_control( drop_method )
+			
+			#	.. label for list
+			lbl_method = SKUI::Label.new( 'Method:', drop_method )
+			lbl_method.position( 12, 12+2 )
+			lbl_method.width = 50
+			w.add_control( lbl_method )
+
 			b = SKUI::Button.new( 'Fit Shapes' ) { |control|
 				method = control.window[:method_name].value
-				puts "using method #{method}!"
-				dlg = runShapeFitting()
+				box_type = control.window[:box_type].value
+				# method id
+				method = method_hash[method];
+				# box type
+				box_type_id = 0
+				if box_type == "Oriented"
+					box_type_id = 1
+				end
+	
+				#pass to shape fitter
+				dlg = runShapeFitting({"method"=>method, "box_type"=>box_type_id })
 			}
-			b.position( 10, 50 )
+			b.position( LEFTCOL, 70 )
 			w.add_control( b )
 			
 			# shwo window!

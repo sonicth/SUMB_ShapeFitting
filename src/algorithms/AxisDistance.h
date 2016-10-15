@@ -12,3 +12,9 @@
 /// @param input	vertices of the input region polygon
 /// @param output	vertices of the mapped quad
 void fitPolyAxesFurthest(const Pts_t& input, Pts_t& output);
+
+/// create CW AABB polygon 
+/// @param	input	region poly
+/// @param	output	AABB poly
+void aabbPoly(const Pts_t& input, Pts_t& output);
+
