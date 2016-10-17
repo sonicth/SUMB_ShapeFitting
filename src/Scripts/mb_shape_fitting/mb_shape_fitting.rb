@@ -26,6 +26,40 @@ module MikeBasille
 		#@_object = 0xfeedbaaddeadbeef;
 		DEBUUG = true;
 		
+		def self.deleteFaces(faces, delete_edges = false)
+			model = Sketchup.active_model
+			es = model.entities
+			#es.erase_entities faces
+			
+			#NOTE instead of deleting face, which  LEAVES the edges - simply erase the edges which will remove the face too
+			faces.each { |f| 
+				if DEBUUG
+					puts "erasing face with id #{f.entityID}"
+				end
+				if delete_edges
+					#NOTE this deletes also neighbouring faces: es.erase_entities f.edges
+					edges = f.edges
+					edges.each { |e| e.erase! }
+				else
+					f.erase!
+				end # delete edges
+				
+				}
+		end
+		
+		def self.extractFaceData(f)
+			vxs = f.vertices
+
+			pts = []
+			#TODO test for planarity
+			vxs.each do |vx|
+				pt = vx.position
+				pts.push([pt.x.to_f, pt.y.to_f])
+			end
+			
+			return {:face_object => f, :points => pts}
+		end # extract face data
+		
 		def self.getSelectedFacesPoints
 			model = Sketchup.active_model
 
@@ -61,18 +95,7 @@ module MikeBasille
 			
 			face_data = []
 
-			faces.each { |f|
-				vxs = f.vertices
-
-				pts = []
-				#TODO test for planarity
-				vxs.each do |vx|
-					pt = vx.position
-					pts.push([pt.x.to_f, pt.y.to_f])
-				end
-				
-				face_data.push({:face_object => f, :points => pts})
-			}
+			faces.each { |f| face_data.push(extractFaceData(f)) }
 
 			#puts "face with #{pts.length} points found."
 			return face_data;
@@ -95,6 +118,7 @@ module MikeBasille
 			}
 
 			new_face = ent.add_face vpts
+			return new_face
 			
 		end #adding poly
 
@@ -124,11 +148,40 @@ module MikeBasille
 				end
 				
 				input_region_geometry = fh[:points]
+				source_face = fh[:face_object]
+				
+				# we may have accidentally selected the fitted polygon!
+				prev_source_id = source_face.get_attribute "ParkGenerator", "source_face"
+				if not prev_source_id.nil?
+					prev_source_face = model.find_entity_by_id(prev_source_id)
+					if not prev_source_face.nil?
+						# swap data to the source face
+						source_face = prev_source_face
+						
+						# extract points again!
+						fh = extractFaceData(source_face)
+						input_region_geometry = fh[:points]
+					end # previous source face
+				end # previous source id
+				
+				# see if there are existing points
+				prev_fitted_id = source_face.get_attribute "ParkGenerator", "fitted_face"
+				if not prev_fitted_id.nil?
+					#retreive entity id
+					prev_fitted_face = model.find_entity_by_id(prev_fitted_id)
+					if not prev_fitted_face.nil?
+						puts "removing previusly created face with id #{prev_fitted_id}!"
+						deleteFaces([prev_fitted_face], true)
+					end
+				end
+				
+				#model.find_entity_by_id(entity_id)
 				
 				if not input_region_geometry.empty?
+					
 					puts "creating fitting polygon..."
 					
-					#fit!!!
+					#WORK DONE HERE!!!
 					result_poly_pts = suFitShape(input_region_geometry, ftting_params)
 
 					if not result_poly_pts.empty?
@@ -137,9 +190,14 @@ module MikeBasille
 						puts "adding fitted polygon..."
 						
 						# delete face
-						#deleteFaces([ fh[:face_object] ])
-													
-						addPoly(result_poly_pts, 0.01)
+						#deleteFaces([ source_face])					
+						
+						#GENERATE NEW FACE
+						fitted_face = addPoly(result_poly_pts, 0.01)
+						# add attributes
+						fitted_face.set_attribute "ParkGenerator", "source_face", source_face.entityID
+						source_face.set_attribute "ParkGenerator", "fitted_face", fitted_face.entityID
+												
 						puts "done."
 						
 					end #not empty result
