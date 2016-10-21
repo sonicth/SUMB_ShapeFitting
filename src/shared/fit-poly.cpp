@@ -28,8 +28,6 @@ void fitTakeFour(Pts_t const& input, PointsPusher_f& pusher)
 
 void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t params)
 {
-	Pts_t tmppts;
-
 	// generate box
 	Box bounding_box;
 	switch (params.method)
@@ -57,6 +55,8 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 	default: break;
 	}
 
+	// generate fitting polygon
+	Pts_t tmppts;
 	switch (params.method)
 	{
 	case FIT_FIRST4:
@@ -76,10 +76,9 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 	case FIT_BBOX:
 		tmppts = bounding_box.toPoly();
 		break;
-
 	}
 
-	// copy temporary points
+	// copy polygon to internal data structure
 	for (auto &pt:tmppts)
 	{
 		pusher(pt);

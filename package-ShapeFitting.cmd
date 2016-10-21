@@ -2,7 +2,7 @@
 
 set ARCHIVER=%ProgramFiles%\7-Zip\7z.exe
 set DST=build\products
-set VERSION=0.1.0
+set VERSION=0.2.0
 set FILENAME=mb_shape_fitting_v%VERSION%.rbz
 
 set CURR_DIR=%~dp0

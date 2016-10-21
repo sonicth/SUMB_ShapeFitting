@@ -15,7 +15,7 @@ module MikeBasille
 		mv_plugin_loader = SketchupExtension.new "Shape Fitting", "mb_shape_fitting/mb_shape_fitting.rb"
 		mv_plugin_loader.copyright	= "Copyright 2016 by Mike Vasiljevs"
 		mv_plugin_loader.creator	= "Mike Basille"
-		mv_plugin_loader.version	= "0.1.0"
+		mv_plugin_loader.version	= "0.2.0"
 		mv_plugin_loader.description	= "Fit a Quad to a selected Polygon Face."
 		Sketchup.register_extension mv_plugin_loader, true
 		
