@@ -26,7 +26,7 @@ void getShapePts(VALUE shape, Pts_t& pts)
 VALUE setShapePts(Pts_t& pts)
 {
 	// Ruby array to store the points to
-	VALUE pts_ar = rb_ary_new2(pts.size());
+	VALUE pts_ar = rb_ary_new2((long) pts.size());
 
 	int i = 0;
 	BOOST_FOREACH(auto const &pt, pts)

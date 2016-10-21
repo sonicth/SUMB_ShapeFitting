@@ -70,6 +70,8 @@ solution "SketchupShapeFitting"
 ----------------------------------------------------------------
 -- The actual plugin .so
 ----------------------------------------------------------------
+--TODO debug command:
+--		"C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe"
 	project "SUMB_ShapeFitting"
 		toolset "v100"
 		targetextension (".so")
@@ -128,11 +130,12 @@ solution "SketchupShapeFitting"
 		flags { "StaticRuntime" }
 		
 		files {	"shared/fit-poly.*",
-					"shared/shared-geometry.h",
+					"shared/shared-geometry.*",
 		}
 		
 		links {	"GteLib", "AlgorithmsLib",		-- local dependencies in project
 					"GTEngine.v14",
+					"ImportExportLib",					-- write/read obj for debugging
 		}
 		
 		includedirs {	GLM_DIR,
@@ -180,4 +183,7 @@ solution "SketchupShapeFitting"
 						
 		includedirs {	GLM_DIR,
 		}
-				
+----------------------------------------------------------------
+-- Import/Export
+----------------------------------------------------------------
+dofile "proj_lib_impexp_premake5.lua"

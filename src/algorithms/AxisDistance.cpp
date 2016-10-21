@@ -5,6 +5,7 @@
   
 #include "includes-algorithms.h"
 #include "AxisDistance.h"
+#include "Adaptive.h"
 
 
 namespace br = boost::range;
@@ -41,48 +42,33 @@ void aabb(const Pts_t& poly_pts, dvec2 &vmin, dvec2 &vmax)
 	}
 }
 
-void aabbPoly(const Pts_t& input, Pts_t& output)
+::Box boxAabb(const Pts_t& input)
 {
-	// must be empty!
-	assert(output.empty());
-
-	// quad
-	output.reserve(4);
-	// get min/max
 	dvec2 vmin, vmax;
 	aabb(input, vmin, vmax);
 
-	// create AABB, CW direction
-	output.push_back(vmin);
-	output.push_back({ vmin.x, vmax.y });
-	output.push_back(vmax);
-	output.push_back({ vmax.x, vmin.y });
+	auto vsize = vmax - vmin;
+
+	return {vmin, vmin + Pt_t{ vsize.x, 0 }, vmin + Pt_t{ 0, vsize.y } };
 }
 
-void fitPolyAxesFurthest(const Pts_t& input, Pts_t& output)
+void fitPolyAxesFurthest(const Pts_t& input, const Box& box, Pts_t& output)
 {
 	assert(output.empty());
 	output.clear();
 
 	Mb::poly pinput;
 	bg::append(pinput, input);
-
-	// bg aabb
-	Mb::box b;
-	bg::envelope(pinput, b);
+	
+	//// bg aabb
+	//Mb::box b;
+	//bg::envelope(pinput, b);
 
 	Mb::point centre;
 	bg::centroid(pinput, centre);
 
-	Pts_t corners;
-	corners.resize(4);
-	corners[0] = b.min_corner();
-	corners[1] = { b.min_corner().x, b.max_corner().y };
-	corners[2] = b.max_corner();
-	corners[3] = { b.max_corner().x, b.min_corner().y };
-
 	output.clear();
-	for (auto &corner:corners)
+	for (auto &corner:box.toPoly())
 	{
 		// ray from the centre to the corner of the bounding box (axis junction)
 		Mb::segment ray{centre, corner};

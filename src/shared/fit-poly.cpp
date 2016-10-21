@@ -30,6 +30,33 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 {
 	Pts_t tmppts;
 
+	// generate box
+	Box bounding_box;
+	switch (params.method)
+	{
+		// method for which Bounding Box is required
+	case FIT_BBOX:
+	case FIT_AXES_FURTHEST:
+		switch (params.box_type)
+		{
+		case BOX_AABB:
+			bounding_box = boxAabb(input);
+			break;
+
+		default:
+			out << "warning: undefined box type, defaulting to OBB!";
+		case BOX_OBB:
+			bounding_box = boxObbGte(input);
+			break;
+		}
+		break;
+
+		// these methods dont require a box
+	case FIT_ADAPTIVE_ANGLE_THRESHOLD: break;	
+	case FIT_FIRST4: break;
+	default: break;
+	}
+
 	switch (params.method)
 	{
 	case FIT_FIRST4:
@@ -37,7 +64,7 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 		return;
 
 	case FIT_AXES_FURTHEST: 
-		fitPolyAxesFurthest(input, tmppts);
+		fitPolyAxesFurthest(input, bounding_box, tmppts);
 		break;
 
 	case FIT_ADAPTIVE_ANGLE_THRESHOLD:
@@ -47,19 +74,9 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 	default:
 		out << "warning: undefined methdod, defaulting to box!";
 	case FIT_BBOX:
-		switch (params.box_type)
-		{
-		case BOX_AABB:
-			aabbPoly(input, tmppts);
-			break;
-
-		default:
-			out << "warning: undefined box type, defaulting to OBB!";
-		case BOX_OBB:
-			fitPolyGTE(input, tmppts);
-			break;
-		}
+		tmppts = bounding_box.toPoly();
 		break;
+
 	}
 
 	// copy temporary points
