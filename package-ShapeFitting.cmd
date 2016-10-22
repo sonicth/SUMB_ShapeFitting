@@ -7,6 +7,7 @@ set FILENAME=mb_shape_fitting_v%VERSION%.rbz
 
 set CURR_DIR=%~dp0
 set ARCHIVE=%CURR_DIR%\%DST%\%FILENAME%
+set UILIB_DIR=%CURR_DIR%\ThirdParty\SKUI\src
 
 REM delete existing archive
 del /f /q %ARCHIVE%
@@ -22,6 +23,9 @@ REM copy binaries
 mkdir %BINDIR%\win_x64
 xcopy /y /d %DST%\release\SUMB_ShapeFitting.so %BINDIR%\win_x64
 xcopy /y /d %DST%\release\ShapeFittingDyLib.dll %BINDIR%\win_x64
+
+REM	..ui library
+xcopy /y /d /f /s	"%UILIB_DIR%"	"%BINDIR%\"
 
 "%ARCHIVER%" a -tzip "%ARCHIVE%" %BINDIR%
 

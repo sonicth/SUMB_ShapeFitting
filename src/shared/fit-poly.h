@@ -30,8 +30,8 @@ typedef boost::function<void(Pts_t::value_type const &)> PointsPusher_f;
 enum EFitMethod
 {
 	FIT_BBOX,			///< OBB using GTE library OR AABB
+	FIT_AXES_CORNERS,	///< vertices that are furthers from the two axes, or clostest to the two axes mid-line
 	FIT_ADAPTIVE_ANGLE_THRESHOLD,		///< adaptive angle threshold
-	FIT_AXES_FURTHEST,	///< vertices that are furthers from the two axes, or clostest to the two axes mid-line
 	FIT_FIRST4,			///< first 4 vertices form the output
 	
 	FIT_METHOD_MAX,

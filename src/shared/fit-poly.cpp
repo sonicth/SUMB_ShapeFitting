@@ -34,7 +34,7 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 	{
 		// method for which Bounding Box is required
 	case FIT_BBOX:
-	case FIT_AXES_FURTHEST:
+	case FIT_AXES_CORNERS:
 		switch (params.box_type)
 		{
 		case BOX_AABB:
@@ -63,7 +63,7 @@ void detectFitPoly(Pts_t const& input, PointsPusher_f &pusher, FitParams_t param
 		fitTakeFour(input, pusher);
 		return;
 
-	case FIT_AXES_FURTHEST: 
+	case FIT_AXES_CORNERS: 
 		fitPolyAxesFurthest(input, bounding_box, tmppts);
 		break;
 

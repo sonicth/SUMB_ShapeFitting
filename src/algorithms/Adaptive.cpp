@@ -103,7 +103,7 @@ public:
 				cos_range.x = threshold;
 			}
 
-			cerr << "**iteration " << i << endl;
+			//cerr << "**iteration " << i << endl;
 			++i;
 		} while (idxs.size() != num_corners && i < MAX_ITERATIONS);
 
