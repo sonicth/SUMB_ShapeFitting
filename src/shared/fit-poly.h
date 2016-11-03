@@ -33,14 +33,14 @@ enum EFitMethod
 	FIT_AXES_CORNERS,	///< vertices that are furthers from the two axes, or clostest to the two axes mid-line
 	FIT_ADAPTIVE_ANGLE_THRESHOLD,		///< adaptive angle threshold
 	FIT_FIRST4,			///< first 4 vertices form the output
-	
-	FIT_METHOD_MAX,
+	FIT_METHOD_MAX
 };
 
 enum EBoxType
 {
 	BOX_AABB,
 	BOX_OBB,
+	BOX_TYPE_MAX
 };
 
 
@@ -48,6 +48,16 @@ struct FitParams_t
 {
 	EFitMethod	method;
 	EBoxType	box_type;
+
+	/// set parameters in ctor
+	/// @brief parameter values changed against bounds and default values are set if outside of the bounds
+	///		template arguments used to allow convertion to numeric values
+	template <typename T, typename U>
+	FitParams_t(T method_, U box_type_)
+		: method(static_cast<EFitMethod>(static_cast<int>(method_ < 0 || method_ >= FIT_METHOD_MAX ? FIT_BBOX : method_))),
+		  box_type(static_cast<EBoxType>(static_cast<int>(box_type_ < 0 || box_type_ >= BOX_TYPE_MAX ? BOX_AABB : box_type_)))
+	{
+	}
 };
 
 

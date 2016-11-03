@@ -14,6 +14,10 @@ local GTE_DIR
 local BUILD_DIR			= ("../build")
 local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
+local MAYA_SDK_DIR
+local MAYA_LIB_DIR
+
+
 --TODO relative paths for externals frameworks - should go into ./ThirdParty
 BOOSTINC_DIR				= "k:/frameworks/src/boost_1_61_0"
 BOOSTLIB_DIR				= BOOSTINC_DIR .. "/stage-".._ACTION.."/lib"
@@ -25,11 +29,14 @@ GLM_DIR						= "K:/frameworks/src/glm-checkout-git"
 GTE_DIR						= "K:/frameworks/src/GeometricTools_3_2/GTEngine/Include"
 GTELIB_DIR					= GTE_DIR .. "/../_Output/v140/x64/Release"
 GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
+-- Maya SDK
+MAYA_SDK_DIR = "K:/frameworks/SDKs/Maya2017"
+MAYA_LIB_DIR = "C:/Program Files/Autodesk/Maya2017/lib"
 
 
 
 
-solution "SketchupShapeFitting"
+solution "ShapeFittingPlugins"
 	language "C++"
 	location (BUILD_DIR .. "/" .. _ACTION)
 	targetdir (BUILD_DIR .. "/products")
@@ -68,7 +75,7 @@ solution "SketchupShapeFitting"
 		targetdir (BUILD_DIR .. "/products/release")
 
 ----------------------------------------------------------------
--- The actual plugin .so
+-- SketchUp  .so plugin
 ----------------------------------------------------------------
 --TODO debug command:
 --		"C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe"
@@ -102,6 +109,33 @@ solution "SketchupShapeFitting"
 			"../../update-ShapeFitting.cmd"
 		}
 		--TODO TARGET		C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe
+----------------------------------------------------------------
+-- Maya  .mll plugin
+----------------------------------------------------------------
+	project "ShapeFittingCmd"
+		targetextension (".mll")
+		implibextension (".lib")
+		kind "SharedLib"
+		flags { "StaticRuntime" }
+		
+		pchsource	("maya/includes-maya.cpp")
+		pchheader	("includes-maya.h")
+		
+		files {	"maya/*",
+		}
+			
+		links {	"Foundation", "OpenMaya", "OpenMayaUI", "OpenMayaAnim", 
+					"ShapeFittingDyLib",
+		}
+		
+		libdirs { BOOSTLIB_DIR,
+					MAYA_LIB_DIR,
+			}
+				
+		includedirs {	GLM_DIR,
+							MAYA_SDK_DIR .. "/include",
+		}
+
 ----------------------------------------------------------------
 -- Third party ruby code
 ----------------------------------------------------------------

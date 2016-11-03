@@ -59,9 +59,8 @@ namespace SketchUp
 			//TODO auto params = getParams(v_fit_params); BAD global/static state with function pointers
 			auto v_value_method = rb_hash_aref(v_fit_params, rb_str_new_cstr("method"));
 			auto v_value_box_type = rb_hash_aref(v_fit_params, rb_str_new_cstr("box_type"));
-			FitParams_t params;
-			params.method = (EFitMethod)(int) NUM2DBL(v_value_method);
-			params.box_type = (EBoxType)(int) NUM2DBL(v_value_box_type);
+			
+			FitParams_t params(NUM2DBL(v_value_method), NUM2DBL(v_value_box_type));
 			
 			// get function..
 			auto fit_fun = fitter_lib->get<void(Pts_t const &, PointsPusher_f, FitParams_t)>("detectFitPoly");
