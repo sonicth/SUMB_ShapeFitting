@@ -243,7 +243,7 @@ module MikeBasille
 			
 			# list of methods
 			#list = %w{ items are separated by space }
-			method_hash = { "Box" => 0, "Axis Corners" => 1, "Adaptive" => 2, "First four" => 3 }
+			method_hash = { "Box" => 0, "Axes Corners" => 1, "Adaptive" => 2, "First Four" => 3 }
 			method_names = method_hash.keys
 			drop_method = SKUI::Listbox.new( method_names )
 			drop_method.value = drop_method.items.first
