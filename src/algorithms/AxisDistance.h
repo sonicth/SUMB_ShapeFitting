@@ -6,8 +6,6 @@
 #pragma once
 
 #include "../shared/shared-geometry.h"
-#include "Adaptive.h"
-#include "Adaptive.h"
 
 /// find a polygon (quad) which vertices are furthest from the axes
 ///		(alternatively nearest to axes corners)
