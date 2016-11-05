@@ -21,10 +21,9 @@ except ImportError:
   from PySide.QtUiTools import *
   from shiboken import wrapInstance 
 
-
-  
 import os.path
-
+import maya.cmds as mc
+import maya.mel as mel
 
 mayaMainWindowPtr = omui.MQtUtil.mainWindow() 
 mayaMainWindow = wrapInstance(long(mayaMainWindowPtr), QWidget) 
@@ -34,7 +33,16 @@ class ShapeFittingUI(QWidget):
 		super(ShapeFittingUI,self).__init__(*args, **kwargs)
 		self.setParent(mayaMainWindow)
 		self.setWindowFlags( Qt.Window )
+
+		# load module
+		self.fit_plugin_path = "K:/external/SUMB_ShapeFitting/build/products/ShapeFittingCmd.mll"
+		mc.loadPlugin(self.fit_plugin_path)
+
+		# load UI
 		self.initUI()
+
+	def closeEvent(self, fish):
+		mc.unloadPlugin("ShapeFittingCmd.mll")
 
 	def initUI(self):
 		loader = QUiLoader()
@@ -72,8 +80,8 @@ class ShapeFittingUI(QWidget):
 	def doFit(self):
 		method_id = self.method_hash[self.ui.dropMethod.currentText()]
 		box_type_id = self.box_type_hash[self.ui.dropBoxType.currentText()]
-		print "*method* " + str(method_id)
-		print "*box type* " + str(box_type_id) + "(" + str(self.ui.dropBoxType.currentText())+")"
+		eval_str = "fitShape {0} {1}".format(method_id, box_type_id)
+		mel.eval(eval_str)
 
 
 	def doCancel(self):
