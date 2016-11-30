@@ -20,7 +20,8 @@ mkdir "%MV_GEN_DIR%\win_x64\"
 mkdir "%MV_GEN_DIR%\rules\"
 
 REM copy files
-xcopy /y /f		"%PRODUCTS_DIR%\SUMB_ShapeFitting.so"					"%SU_PLUGIN_SF_DIR%\win_x64\"
+xcopy /y /f		"%PRODUCTS_DIR%\SUMB_ShapeFitting_rb20.so"					"%SU_PLUGIN_SF_DIR%\win_x64\"
+xcopy /y /f		"%PRODUCTS_DIR%\SUMB_ShapeFitting_rb22.so"					"%SU_PLUGIN_SF_DIR%\win_x64\"
 xcopy /y /f		"%PRODUCTS_DIR%\ShapeFittingDyLib.dll"						"%SU_PLUGIN_SF_DIR%\win_x64\"
 xcopy /y /d /f	"%LOCAL_PLUGIN_DIR%\..\mb_shape_fitting_plugin.rb"	"%SU_PLUGIN_DIR%\"
 xcopy /y /d /f	"%LOCAL_PLUGIN_DIR%\mb_shape_fitting.rb"				"%SU_PLUGIN_SF_DIR%\"

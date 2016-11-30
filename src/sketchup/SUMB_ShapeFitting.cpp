@@ -91,7 +91,15 @@ namespace SketchUp
 
 // the Init_[Name] function creates Ruby module [Name] when called
 extern "C"
-void Init_SUMB_ShapeFitting()
+void
+#if		defined(RUBY20)
+Init_SUMB_ShapeFitting_rb20
+#elif	defined(RUBY22)
+Init_SUMB_ShapeFitting_rb22
+#else  // neither RUBY defined!
+#error "unknown ruby version!"
+#endif
+()
 {
 	VALUE mod_val_root = rb_define_module("MikeBasille");
 	VALUE mod_val = rb_define_module_under(mod_val_root, "ShapeFitting");

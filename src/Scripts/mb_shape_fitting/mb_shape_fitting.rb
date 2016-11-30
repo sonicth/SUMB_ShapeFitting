@@ -13,15 +13,34 @@ Name: ShapeFitting
 module MikeBasille
 
 	module ShapeFitting
+		#platform directory
 		plugin_platform = 'win_x64'
+
+		# suffix varies with version	
+		plugin_suffix = ''
+		su_version = Sketchup.version.to_i
+		#	...add suffix
+		if su_version >= 17
+			# using SketchUp 2017 and above
+			plugin_suffix = '_rb22'
+		else
+			# using SketchUp 2016 (perhaps 2015 and some versions below)
+			plugin_suffix = '_rb20'
+		end
+
+		# directory of this script
 		plugin_dir = File.dirname(__FILE__)
-		plugin_name = plugin_dir + "/" + plugin_platform + '/' + 'SUMB_ShapeFitting.so'
+		
+		# full library path
+		plugin_name = plugin_dir + "/" + plugin_platform + '/' + 'SUMB_ShapeFitting' + plugin_suffix + '.so'
+		
+		# load library!
+		require plugin_name
+	
 		#UI library
 		skui_path = File.join( plugin_dir, 'SKUI' )
 		load File.join( skui_path, 'embed_skui.rb' )
 		::SKUI.embed_in( self )
-
-		require plugin_name
 
 		#@_object = 0xfeedbaaddeadbeef;
 		DEBUUG = true;
