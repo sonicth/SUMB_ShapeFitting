@@ -2,7 +2,7 @@
 
 set ARCHIVER=%ProgramFiles%\7-Zip\7z.exe
 set DST=build\products
-set VERSION=0.2.0
+set VERSION=0.2.1
 set FILENAME=mb_shape_fitting_v%VERSION%.rbz
 
 set CURR_DIR=%~dp0
@@ -21,7 +21,8 @@ set BINDIR=mb_shape_fitting
 
 REM copy binaries
 mkdir %BINDIR%\win_x64
-xcopy /y /d %DST%\release\SUMB_ShapeFitting.so %BINDIR%\win_x64
+xcopy /y /d %DST%\release\SUMB_ShapeFitting_rb20.so %BINDIR%\win_x64
+xcopy /y /d %DST%\release\SUMB_ShapeFitting_rb22.so %BINDIR%\win_x64
 xcopy /y /d %DST%\release\ShapeFittingDyLib.dll %BINDIR%\win_x64
 
 REM	..ui library

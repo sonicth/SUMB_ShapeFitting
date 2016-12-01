@@ -103,11 +103,6 @@ module MikeBasille
 				return []
 			end
 
-			#if faces.length > 1
-			#	UI.messagebox("There are #{faces.length} faces selected. Can only deal with a single face at the moment. Will use the first face.");
-			#	return []
-			#end
-
 			if not others.empty?
 				puts "warning! expected faces only in the selection, selected #{others.length} other objects! Continuing..."
 			end
@@ -121,6 +116,7 @@ module MikeBasille
 
 		end #getSelectedFacesPoints
 		
+		# add new face to SU from points
 		def self.addPoly(pts, y_offset = 0)
 		
 			model = Sketchup.active_model
@@ -140,7 +136,26 @@ module MikeBasille
 			return new_face
 			
 		end #adding poly
-
+		
+		# find exisitng face hashed in the dictionary
+		def self.findHashedFace(source_face, dictionary_face_key)
+			#NOTE no point in caching, called rearely
+			model = Sketchup.active_model
+			
+			face_id = source_face.get_attribute "ParkGenerator", dictionary_face_key
+			if not face_id.nil?
+				face = model.find_entity_by_id(face_id)
+				#if the face still exists it will not be nil
+				return face
+			end # previous source id
+			
+			return nil
+		end
+			
+		# fitted shape offset - must not be in the same plane as the source shape!
+		AVOID_CLIPPING_Z_OFFSET = 0.01
+		
+		# main processing function; gets called when the button gets pressed!
 		def self.runShapeFitting(ftting_params)		
 			
 			face_data = getSelectedFacesPoints
@@ -150,7 +165,6 @@ module MikeBasille
 			if face_data.empty?
 				return
 			end
-
 
 			# for multiple faces make Undo message nicer
 			if face_data.length == 1
@@ -170,37 +184,28 @@ module MikeBasille
 				source_face = fh[:face_object]
 				
 				# we may have accidentally selected the fitted polygon!
-				prev_source_id = source_face.get_attribute "ParkGenerator", "source_face"
-				if not prev_source_id.nil?
-					prev_source_face = model.find_entity_by_id(prev_source_id)
-					if not prev_source_face.nil?
-						# swap data to the source face
-						source_face = prev_source_face
-						
-						# extract points again!
-						fh = extractFaceData(source_face)
-						input_region_geometry = fh[:points]
-					end # previous source face
-				end # previous source id
+				prev_source_face = findHashedFace(source_face, "source_face")
+				if not prev_source_face.nil?
+					# swap data to the source face
+					source_face = prev_source_face
+					
+					# extract points again!
+					fh = extractFaceData(source_face)
+					input_region_geometry = fh[:points]
+				end # previous source face
 				
 				# see if there are existing points
-				prev_fitted_id = source_face.get_attribute "ParkGenerator", "fitted_face"
-				if not prev_fitted_id.nil?
-					#retreive entity id
-					prev_fitted_face = model.find_entity_by_id(prev_fitted_id)
-					if not prev_fitted_face.nil?
-						puts "removing previusly created face with id #{prev_fitted_id}!"
-						deleteFaces([prev_fitted_face], true)
-					end
+				prev_fitted_face = findHashedFace(source_face, "fitted_face")
+				if not prev_fitted_face.nil?
+					deleteFaces([prev_fitted_face], true)
 				end
-				
-				#model.find_entity_by_id(entity_id)
-				
+
 				if not input_region_geometry.empty?
 					
 					puts "creating fitting polygon..."
 					
 					#WORK DONE HERE!!!
+					# call native algorithm library
 					result_poly_pts = suFitShape(input_region_geometry, ftting_params)
 
 					if not result_poly_pts.empty?
@@ -212,7 +217,8 @@ module MikeBasille
 						#deleteFaces([ source_face])					
 						
 						#GENERATE NEW FACE
-						fitted_face = addPoly(result_poly_pts, 0.01)
+						# NOTE face is offseted a little bit so that SU does not mix it with the original shape!
+						fitted_face = addPoly(result_poly_pts, AVOID_CLIPPING_Z_OFFSET)
 						# add attributes
 						fitted_face.set_attribute "ParkGenerator", "source_face", source_face.entityID
 						source_face.set_attribute "ParkGenerator", "fitted_face", fitted_face.entityID
@@ -231,6 +237,7 @@ module MikeBasille
 		
 		LEFTCOL = 90
 		
+		# setup UI - window with widgets
 		def self.initUI
 			options = {
 			  :title           => 'Shape Fitting',
@@ -249,7 +256,6 @@ module MikeBasille
 			drop_boxtype.width = 170
 			drop_boxtype.on( :change ) { |control, value| # (?) Second argument needed?
 				boxtype = control.value
-				puts "Box type #{boxtype}"
 			}
 			w.add_control( drop_boxtype )
 			

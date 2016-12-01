@@ -63,12 +63,12 @@ public:
 /// adapted thresholder 
 ///	(NOT decorator since interface differs)
 class AdaptedThresholder
-	: public DotThresholder
 {
 	static const auto MAX_ITERATIONS = 10;
+	DotThresholder tresholder;	///< algorithm responsible for each adaptive step: Dot Thresholder
 public:
 	explicit AdaptedThresholder(Pts_t const &in_poly)
-		: DotThresholder(in_poly)
+		: tresholder{ in_poly }
 	{
 	}
 
@@ -86,7 +86,7 @@ public:
 		do
 		{
 			auto threshold = (cos_range.x + cos_range.y)*0.5;
-			idxs = DotThresholder::filter(threshold);
+			idxs = tresholder.filter(threshold);
 			auto num_idxs = idxs.size();
 
 			// adapt thresholds
