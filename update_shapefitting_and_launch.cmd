@@ -10,4 +10,3 @@ call update-ShapeFitting.cmd
 
 REM call sketchup
 call "%SU_PATH%" -RubyStartup "%CURR_DIR%/src/Scripts/autoload_shape_fitting.rb" "%CURR_DIR%/sample_projects/multipoints.skp"
-cd ..
