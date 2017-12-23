@@ -1,4 +1,4 @@
-set SU_PATH=C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe
+set SU_PATH=C:\Program Files\SketchUp\SketchUp 2017\SketchUp.exe
 set CURR_DIR=%~dp0
 
 REM kill existing process and wait for 1 second

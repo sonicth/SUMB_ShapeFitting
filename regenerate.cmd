@@ -1,7 +1,7 @@
 @echo off
-SET VS_VERSION=vs2015
+SET VS_VERSION=vs2017
 
 premake5 --file=src/SUMB_ShapeFitting_premake5.lua %VS_VERSION%
-premake5 --file=src/adaptive_premake5.lua %VS_VERSION%
+REM premake5 --fi/le=src/adaptive_premake5.lua %VS_VERSION%
 
 pause
