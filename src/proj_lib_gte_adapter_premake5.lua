@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
 -- GTE project
 ----------------------------------------------------------------
-GTE_DIR						= "K:/frameworks/src/GeometricTools_3_2/GTEngine/Include"
+GTE_DIR						= FRAMEWORK_PATH .."/GeometricTools_3_2/GTEngine/Include"
 GTELIB_DIR					= GTE_DIR .. "/../_Output/v140/x64/Release"
 GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
 
@@ -12,7 +12,9 @@ GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
 		pchsource	("gte/includes-gte.cpp")
 		pchheader	("includes-gte.h")
 		
-		files {	"gte/*",
+		files {	
+			"gte/*",
+			"shared/shared-geometry.*",
 		}
 						
 		includedirs {	GTE_DIR,
