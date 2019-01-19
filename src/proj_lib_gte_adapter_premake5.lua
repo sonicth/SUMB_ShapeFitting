@@ -8,7 +8,9 @@
 		pchsource	("gte/includes-gte.cpp")
 		pchheader	("includes-gte.h")
 		
-		files {	"../../SUMB_ShapeFitting/src/gte/*",
+		files {	
+			"gte/*",
+			"shared/shared-geometry.*",
 		}
 						
 		includedirs {	GTE_INC_DIR,
