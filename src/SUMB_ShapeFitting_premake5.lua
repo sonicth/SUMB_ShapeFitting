@@ -1,32 +1,6 @@
-local BOOSTINC_DIR
-local BOOSTLIB_DIR
-
-local RUBYSDKINC_64_DIR
-local RUBYSDKPLAT_64_DIR
-local RUBYSDKLIB_DIR
-
-local GLM_DIR
-
-local GMP_DIR
-
-local GTE_DIR
-
 local BUILD_DIR			= ("../build")
-local RUBYUTILS_DIR	=  "../ThirdParty/RubyUtils"
 
---TODO relative paths for externals frameworks - should go into ./ThirdParty
-BOOSTINC_DIR				= "k:/frameworks/src/boost_1_61_0"
-BOOSTLIB_DIR				= BOOSTINC_DIR .. "/stage-".._ACTION.."/lib"
-BOOSTLIB_VC10_DIR	= BOOSTINC_DIR .. "/stage-vs2010/lib"
-RUBYSDKINC_64_DIR	= "k:/frameworks/src/ruby-c-extension-examples/ThirdParty/include/ruby"
-RUBYSDKLIB_DIR			= RUBYSDKINC_64_DIR .. "/../../lib/win32"
-GLM_DIR						= "K:/frameworks/src/glm-checkout-git"
-GTE_DIR						= "K:/frameworks/src/GeometricTools_3_2/GTEngine/Include"
-GTELIB_DIR					= GTE_DIR .. "/../_Output/v140/x64/Release"
-GTELIBd_DIR				= GTE_DIR .. "/../_Output/v140/x64/Debug"
-
-
-
+dofile "externals.lua"
 
 solution "SketchupShapeFitting"
 	language "C++"
@@ -45,14 +19,15 @@ solution "SketchupShapeFitting"
 		}
 	end
 	
-	includedirs {	BOOSTINC_DIR,
+	includedirs {	BOOST_INC_DIR,
 	}
 	includedirs {	RUBYUTILS_DIR .. "/..",
-					GLM_DIR,	
+					GLM_INC_DIR,
+					BOOST_INC_DIR,
 	}			
 	
-	libdirs {	BOOSTLIB_DIR,
-				RUBYSDKLIB_DIR,
+	libdirs {	BOOST_LIB_DIR,
+				RUBYSDK_LIB_DIR,
 	}
 	
 	linkoptions { 
@@ -73,31 +48,18 @@ solution "SketchupShapeFitting"
 -- The actual plugin .so
 ----------------------------------------------------------------
 --TODO debug command:
---		"C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe"
-	project "SUMB_ShapeFitting_rb20"
-		dofile "common_su_shapefitting.lua"
-		toolset "v100"
-		defines { "RUBY20" }
-		files {	RUBYUTILS_DIR .. "/**",	}
-		excludes { "sketchup/SUMB_ShapeFitting_rb22.def" }
-		links {	"x64-msvcrt-ruby200", 
-			}
-		libdirs { BOOSTLIB_VC10_DIR }			
-		includedirs {	RUBYSDKINC_64_DIR .. "/2.0/win32_x64", 
-							RUBYSDKINC_64_DIR .. "/2.0/win32_x64/x64-mswin64_100"
-			}
-			
+--		"C:\Program Files\SketchUp\SketchUp 2016\SketchUp.exe"			
 	project "SUMB_ShapeFitting_rb22"
 		dofile "common_su_shapefitting.lua"
-		toolset "v140"
+		-- toolset "v140"
 		defines { "RUBY22" }
 		files {	RUBYUTILS_DIR .. "/**",	}
 		excludes { "sketchup/SUMB_ShapeFitting_rb20.def" }
 		links {	"x64-msvcrt-ruby220", 
 			}
-		libdirs { BOOSTLIB_DIR }			
-		includedirs {	RUBYSDKINC_64_DIR .. "/2.2/win32_x64", 
-							RUBYSDKINC_64_DIR .. "/2.2/win32_x64/x64-mswin64_140"
+		libdirs { BOOST_LIB_DIR }			
+		includedirs {	RUBYSDK_INC_DIR .. "/2.2/win32_x64", 
+							RUBYSDK_INC_DIR .. "/2.2/win32_x64/x64-mswin64_140"
 			}
 
 			
@@ -106,6 +68,12 @@ solution "SketchupShapeFitting"
 --==================================
 --vs2015
 --==================================
+
+----------------------------------------------------------------
+-- GTE Adaptor library with includes
+----------------------------------------------------------------
+dofile "proj_lib_gte_adapter_premake5.lua"
+
 ----------------------------------------------------------------
 -- DLL library
 ----------------------------------------------------------------
@@ -119,38 +87,21 @@ solution "SketchupShapeFitting"
 		}
 		
 		links {	"GteLib", "AlgorithmsLib",		-- local dependencies in project
-					"GTEngine.v14",
 					"ImportExportLib",					-- write/read obj for debugging
 		}
 		
-		includedirs {	GLM_DIR,
+		includedirs {	GLM_INC_DIR,
 		}
 		
-		libdirs {	BOOSTLIB_DIR,
-		}		
+		libdirs {	BOOST_LIB_DIR, GTE_LIB_DIR
+		}	
 		
 		configuration "Debug"
-			libdirs {	GTELIBd_DIR,	
-			}
-			
+			links { "GTEngine.v14-gl4debug" }
+
 		configuration "Release"
-			libdirs {	GTELIB_DIR,	
-			}
-----------------------------------------------------------------
--- GTE project
-----------------------------------------------------------------
-	project "GteLib"
-		kind "StaticLib"		
-		flags { "StaticRuntime" }
-		pchsource	("gte/includes-gte.cpp")
-		pchheader	("includes-gte.h")
-		
-		files {	"gte/*",
-		}
-						
-		includedirs {	GTE_DIR,
-							GLM_DIR,
-		}
+			links { "GTEngine.v14-gl4release" }
+
 ----------------------------------------------------------------
 -- algorithms project (own work)
 ----------------------------------------------------------------
@@ -166,7 +117,7 @@ solution "SketchupShapeFitting"
 		
 		excludes { "algorithms/adaptive_test.cpp" }
 						
-		includedirs {	GLM_DIR,
+		includedirs {	GLM_INC_DIR,
 		}
 ----------------------------------------------------------------
 -- Import/Export

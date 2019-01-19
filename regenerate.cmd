@@ -1,7 +1,15 @@
 @echo off
-SET VS_VERSION=vs2015
 
-premake5 --file=src/SUMB_ShapeFitting_premake5.lua %VS_VERSION%
-premake5 --file=src/adaptive_premake5.lua %VS_VERSION%
+if not "%1" == "" (
+	SET ACTION=%1
+	echo setting action/generator to: %ACTION%
+) else (
+	SET ACTION=vs2017
+)
+
+premake5 --file=src/SUMB_ShapeFitting_premake5.lua %ACTION%
+premake5 --file=src/adaptive_premake5.lua %ACTION%
 
 pause
+
+:end

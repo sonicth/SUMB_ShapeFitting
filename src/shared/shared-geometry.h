@@ -19,5 +19,17 @@ struct Box
 	Pt_t x;	/// south-east (lower right)
 	Pt_t y;	/// north-west (upper left)
 
+	/// convert into polygon points
 	Pts_t toPoly() const;
 };
+
+inline
+Pts_t Box::toPoly() const
+{
+	return				// rectangle vertices clockwise
+	{ o,				// SW (South-West or lower left corner)
+		y,				// NW
+		y + (x - o),	// NE; or x + (y - o)
+		x				// SE
+	};
+}

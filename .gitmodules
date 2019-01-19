@@ -1,3 +1,17 @@
 [submodule "ThirdParty\\SKUI"]
 	path = ThirdParty\\SKUI
 	url = https://github.com/thomthom/SKUI.git
+[submodule "externals/builds-gte"]
+	path = externals/builds-gte
+	url = https://bitbucket.org/sonicth/builds-gte.git
+	branch = 3_20
+[submodule "externals/builds-boost"]
+	path = externals/builds-boost
+	url = https://bitbucket.org/sonicth/build-boost-1_69-static.git
+[submodule "externals/builds-glm"]
+	path = externals/builds-glm
+	url = https://bitbucket.org/sonicth/builds-glm.git
+	branch = 0_9_7
+[submodule "externals/builds-su-ruby-api"]
+	path = externals/builds-su-ruby-api
+	url = https://bitbucket.org/sonicth/builds-su-ruby-api.git
