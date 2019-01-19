@@ -1,5 +1,5 @@
-[submodule "ThirdParty\\SKUI"]
-	path = ThirdParty\\SKUI
+[submodule "ThirdParty/SKUI"]
+	path = ThirdParty/SKUI
 	url = https://github.com/thomthom/SKUI.git
 [submodule "externals/builds-gte"]
 	path = externals/builds-gte
