@@ -15,3 +15,6 @@
 [submodule "externals/builds-su-ruby-api"]
 	path = externals/builds-su-ruby-api
 	url = https://bitbucket.org/sonicth/builds-su-ruby-api.git
+[submodule "externals/cmake-pch"]
+	path = externals/cmake-pch
+	url = https://github.com/nanoant/CMakePCHCompiler.git
