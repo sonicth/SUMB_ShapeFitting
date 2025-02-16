@@ -13,7 +13,7 @@ find_package( Boost 1.69 REQUIRED )
 
 #add glm
 set(glm_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../externals/builds-glm/lib/cmake/glm")
-find_package(glm 0.9.7 REQUIRED)
+find_package(glm REQUIRED)
 
 #gte
 set(GTE_INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../externals/builds-gte/include")
