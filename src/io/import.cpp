@@ -7,6 +7,7 @@
 //#include "includes-io.h"
 #include "tiny_obj_loader.h"
 #include "import.h"
+#include <stdexcept>
 
 void readObj1(char const * filename, Pts_t & pts_out)
 {
